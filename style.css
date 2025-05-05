@@ -1,0 +1,176 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 1em;
+    background-color: #f9fdf9;
+    color: #333;
+  }
+  
+  h1 {
+    margin-top: 0;
+    margin-bottom: 0.2em;
+  }
+  
+  /* Inloggningsformulär och rutor */
+  .form-box {
+    max-width: 400px;
+    margin: 1em auto;
+    padding: 1em;
+    background-color: #ffffff;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+  }
+  
+  .form-box input[type="text"],
+  .form-box input[type="password"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+  }
+  
+  .form-box button {
+    width: 100%;
+    background-color: var(--primary, #2e7d32);
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    cursor: pointer;
+  }
+  
+  .form-box button:hover {
+    background-color: var(--primary-dark, #1b5e20);
+  }
+  
+  .form-box a {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--primary-light, #66bb6a);
+    font-size: 0.95rem;
+  }
+  
+  #kurs {
+    max-width: 800px;
+    margin: 0 auto;
+    padding-top: 1em;
+  }
+  
+  .uppgift {
+    border: 1px solid #ccc;
+    background-color: #e8f5e9;
+    padding: 1em;
+    border-radius: 10px;
+    margin-bottom: 1em;
+  }
+  
+  .uppgift.klar {
+    opacity: 0.6;
+  }
+  
+  .dold {
+    display: none;
+  }
+  
+  h2#aktiv-del {
+    text-align: center;
+    font-size: 1.1em;
+    margin-bottom: 1em;
+    color: #2e7d32;
+  }
+  
+  /* Framstegsmätare */
+  #progress-bar-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 10px;
+    height: 100vh;
+    background-color: #c8e6c9;
+    z-index: 9999;
+  }
+  
+  #progress-bar {
+    width: 100%;
+    background-color: #2e7d32;
+    height: 0;
+    transition: height 0.3s ease;
+  }
+  
+  /* Tillgänglighetsinställningar */
+  #accessibility-options {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    background: #e8f5e9;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 14px;
+    max-width: 160px;
+  }
+  
+  #accessibility-options label {
+    font-size: 12px;
+  }
+  
+  #accessibility-options select,
+  #accessibility-options input[type=range] {
+    margin: 5px 0;
+    width: 100%;
+    font-size: 12px;
+  }
+  
+  /* Mörkt tema */
+  body.dark {
+    background-color: #121212;
+    color: #ffffff;
+  }
+  
+  body.dark .form-box,
+  body.dark .uppgift,
+  body.dark #accessibility-options {
+    background-color: #1e1e1e;
+    color: #e0e0e0;
+    border: 1px solid #333;
+  }
+  
+  body.dark input,
+  body.dark select,
+  body.dark button {
+    background-color: #2c2c2c;
+    color: #fff;
+    border: 1px solid #555;
+  }
+  
+  /* Hög kontrast */
+  body.high-contrast {
+    background-color: #000000;
+    color: #ffffff;
+  }
+  
+  body.high-contrast .form-box,
+  body.high-contrast .uppgift,
+  body.high-contrast #accessibility-options {
+    background-color: #000000;
+    color: #ffff00;
+    border: 2px solid #ffff00;
+  }
+  
+  body.high-contrast input,
+  body.high-contrast select {
+    background-color: #000;
+    color: #ffff00;
+    border: 2px solid #ffff00;
+  }
+  
+  body.high-contrast button {
+    background: #ffff00;
+    color: #000000;
+    border: 2px solid #000;
+  }
+  

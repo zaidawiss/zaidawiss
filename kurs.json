@@ -1,0 +1,23 @@
+[
+    {
+      "Moment": "Vad är JavaScript?",
+      "Instruktion (för nybörjare)": "JavaScript är ett programmeringsspråk som används för att göra webbsidor interaktiva. Läs om vad JavaScript gör och vad det används till."
+    },
+    {
+      "Moment": "Kör din första kodrad",
+      "Instruktion (för nybörjare)": "Öppna webbläsarens utvecklingsverktyg (högerklicka > Inspektera > Console) och skriv: console.log('Hej världen!');"
+    },
+    {
+      "Moment": "Variabler",
+      "Instruktion (för nybörjare)": "Lär dig skapa variabler med let och const. Exempel: let namn = 'Sara';"
+    },
+    {
+      "Moment": "If-satser",
+      "Instruktion (för nybörjare)": "Lär dig göra val i koden med if. Exempel: if (namn === 'Sara') { console.log('Hej Sara'); }"
+    },
+    {
+      "Moment": "Loopar",
+      "Instruktion (för nybörjare)": "Lär dig loopa med for. Exempel: for (let i = 0; i < 5; i++) { console.log(i); }"
+    }
+  ]
+  

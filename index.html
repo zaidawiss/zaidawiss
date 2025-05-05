@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8" />
+  <title>JavaScript (nybörjare)</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    h1, h2, #visa-klara-label {
+      text-align: left;
+      margin-left: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div id="progress-bar-container">
+    <div id="progress-bar"></div>
+  </div>
+
+  <h1>JavaScript: nybörjare</h1>
+  <h2 id="aktiv-del"></h2>
+
+  <div id="login-form" class="form-box">
+    <h2>Logga in</h2>
+    <label for="username">Användarnamn:</label>
+    <input type="text" id="username">
+    <label for="password">Lösenord:</label>
+    <input type="password" id="password">
+    <button id="login">Logga in</button>
+  </div>
+
+  <div id="register-form" class="form-box" style="display:none;">
+    <h2>Registrera konto</h2>
+    <label for="reg-username">Användarnamn:</label>
+    <input type="text" id="reg-username">
+    <label for="reg-password">Lösenord:</label>
+    <input type="password" id="reg-password">
+    <button id="register">Registrera</button>
+  </div>
+
+  <div style="margin-left: 1em;">
+    <label id="visa-klara-label"><input type="checkbox" id="visa-klara"> Visa även avklarade uppgifter</label><br>
+    <label for="theme-select">Tema:</label>
+    <select id="theme-select">
+      <option value="light">Ljust</option>
+      <option value="dark">Mörkt</option>
+      <option value="high-contrast">Hög kontrast</option>
+    </select>
+  </div>
+
+  <div id="kurs"></div>
+
+  <script>
+    document.getElementById("theme-select").addEventListener("change", e => {
+      document.body.className = e.target.value;
+      localStorage.setItem("preferredTheme", e.target.value);
+    });
+
+    document.getElementById("visa-klara").addEventListener("change", (e) => {
+      const visade = e.target.checked;
+      const kursEl = document.getElementById("kurs");
+      const uppgifter = Array.from(kursEl.querySelectorAll(".uppgift"));
+      uppgifter.sort((a, b) => visade ? a.dataset.index - b.dataset.index : b.dataset.index - a.dataset.index);
+      uppgifter.forEach(el => kursEl.appendChild(el));
+
+      document.querySelectorAll(".uppgift.klar").forEach(el => {
+        el.style.display = visade ? "block" : "none";
+      });
+    });
+
+    const sparatTema = localStorage.getItem("preferredTheme");
+    if (sparatTema) {
+      document.body.className = sparatTema;
+      document.getElementById("theme-select").value = sparatTema;
+    }
+
+    async function hämtaOchVisaKurs(användare) {
+      const res = await fetch("/api/kurs");
+      const kurs = await res.json();
+      const progressRes = await fetch(`/api/progress?user=${användare}`);
+      const progress = await progressRes.json();
+
+      const kursEl = document.getElementById("kurs");
+      kursEl.innerHTML = "";
+      document.getElementById("aktiv-del").innerText = "";
+      document.getElementById("progress-bar").style.height = "0";
+
+      let förstaOklara = true;
+      let totalt = kurs.length;
+      let klara = 0;
+
+      kurs.reverse().forEach((uppg, i) => {
+        const id = uppg.Deluppgift || `${uppg.Moment}-${i}`;
+        const ärKlar = progress[id];
+        if (ärKlar) klara++;
+
+        const ruta = document.createElement("div");
+        ruta.className = "uppgift" + (ärKlar ? " klar" : "");
+        ruta.dataset.index = i;
+        ruta.innerHTML = `
+          <p>${uppg["Instruktion (för nybörjare)"]}</p>
+          <label><input type="checkbox" ${ärKlar ? "checked" : ""}> Markera som klar</label>
+        `;
+
+        const checkbox = ruta.querySelector("input");
+        checkbox.addEventListener("change", async () => {
+          ruta.classList.toggle("klar", checkbox.checked);
+          await fetch("/api/progress/save", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user: användare, id: id, klar: checkbox.checked })
+          });
+
+          if (checkbox.checked) {
+            const alla = Array.from(document.querySelectorAll(".uppgift"));
+            const dolda = alla.filter(el => el.classList.contains("dold"));
+            if (dolda.length > 0) {
+              const nästa = dolda[0];
+              nästa.classList.remove("dold");
+              document.getElementById("aktiv-del").innerText = nästa.querySelector("p").innerText;
+              nästa.scrollIntoView({ behavior: "smooth", block: "start" });
+            } else {
+              document.getElementById("aktiv-del").innerText = "Alla uppgifter är klara!";
+            }
+          }
+
+          const uppgifter = document.querySelectorAll(".uppgift");
+          const klara = document.querySelectorAll(".uppgift.klar");
+          const procent = Math.round((klara.length / uppgifter.length) * 100);
+          document.getElementById("progress-bar").style.height = `${procent}%`;
+        });
+
+        if (!ärKlar && förstaOklara) {
+          document.getElementById("aktiv-del").innerText = uppg.Moment;
+          förstaOklara = false;
+        } else if (!ärKlar) {
+          ruta.classList.add("dold");
+        }
+
+        kursEl.prepend(ruta);
+      });
+
+      const procent = Math.round((klara / totalt) * 100);
+      document.getElementById("progress-bar").style.height = `${procent}%`;
+    }
+
+    const savedUser = localStorage.getItem("loggedInUser");
+    if (savedUser) {
+      document.getElementById("login-form").style.display = "none";
+      document.getElementById("register-form").style.display = "none";
+      hämtaOchVisaKurs(savedUser);
+    }
+  </script>
+</body>
+</html>
